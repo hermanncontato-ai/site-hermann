@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+anthropic
+python-dotenv
+pydantic
+crewai
+langchain
+langchain-anthropic
