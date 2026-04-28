@@ -2,10 +2,28 @@ import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
+from pydantic import BaseModel
 from api.models import LeadRequest, LeadResponse
 from api.lead_agent import qualify_lead
+from api.sheets_service import update_lead_status
 
 load_dotenv()
+
+app = FastAPI(
+    title="Hermann AI API",
+    description="API de qualificação de leads com IA para Hermann Mallard Marketing de Resultado",
+    version="1.0.0",
+)
+
+# Modelos para novos endpoints
+class UpdateLeadStatusRequest(BaseModel):
+    whatsapp: str
+    status: str
+
+
+class StatusResponse(BaseModel):
+    sucesso: bool
+    mensagem: str
 
 app = FastAPI(
     title="Hermann AI API",
@@ -41,3 +59,13 @@ def qualify_lead_endpoint(lead: LeadRequest):
         return qualify_lead(lead)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/leads/update-status", response_model=StatusResponse)
+def update_lead_status_endpoint(request: UpdateLeadStatusRequest):
+    """Atualiza o status de um lead no Google Sheets"""
+    result = update_lead_status(request.whatsapp, request.status)
+    return StatusResponse(
+        sucesso=result["sucesso"],
+        mensagem=result["mensagem"]
+    )

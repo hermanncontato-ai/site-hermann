@@ -2,6 +2,7 @@ import os
 import json
 import anthropic
 from api.models import LeadRequest, LeadResponse
+from api.sheets_service import save_lead_to_sheets
 from urllib.parse import quote
 
 HERMANN_WA = "5521967472172"
@@ -20,6 +21,17 @@ Regras:
 - Score 8-10: lead quente (investimento alto, desafio claro, negócio estabelecido)
 - Score 5-7: lead morno (potencial mas precisa de nutrição)
 - Score 1-4: lead frio (pouco investimento ou negócio muito inicial)
+
+Peso por desafio declarado (some ao score base):
+- "Tráfego pago": +2 (alta intenção de compra, serviço core de Hermann)
+- "Gerar mais leads": +2 (desafio direto, alta conversão)
+- "Converter mais leads": +2 (desafio direto, alta conversão)
+- "Automatizar atendimento": +1 (serviço de IA, bom ticket)
+- "Produzir conteúdo": +1 (serviço complementar, ticket médio)
+- "Medir resultados": +0 (desafio analítico, menor urgência)
+- "Criar presença digital": +0 (pode ser negócio muito inicial)
+- "Outro": +0 (avaliar com atenção)
+
 - A mensagem_personalizada deve ser calorosa, humana e específica ao negócio do lead
 - As notas são para uso interno de Hermann (resumo estratégico)
 
@@ -63,6 +75,20 @@ Investimento mensal disponível: {lead.investimento}"""
 
     msg = data["mensagem_personalizada"]
     wa_url = f"https://wa.me/{HERMANN_WA}?text={quote(msg)}"
+
+    # Salva lead no Google Sheets
+    sheets_result = save_lead_to_sheets({
+        "nome": lead.nome,
+        "whatsapp": lead.whatsapp,
+        "negocio": lead.negocio,
+        "desafio": lead.desafio,
+        "investimento": lead.investimento,
+        "score": data["score"],
+        "perfil": data["perfil"],
+        "notas": data["notas"]
+    })
+    
+    print(f"[SHEETS] {sheets_result['mensagem']}")
 
     return LeadResponse(
         score=data["score"],

@@ -3,3 +3,7 @@ uvicorn[standard]
 anthropic
 python-dotenv
 pydantic
+gspread
+google-auth-oauthlib
+google-auth-httplib2
+google-auth

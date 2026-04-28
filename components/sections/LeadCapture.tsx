@@ -213,6 +213,8 @@ export default function LeadCapture() {
                         <option value="">Principal desafio atual</option>
                         <option value="Gerar mais leads">Gerar mais leads</option>
                         <option value="Converter mais leads">Converter mais leads</option>
+                        <option value="Tráfego pago">Tráfego pago (Google Ads / Meta Ads)</option>
+                        <option value="Produzir conteúdo">Produzir conteúdo</option>
                         <option value="Automatizar atendimento">Automatizar atendimento</option>
                         <option value="Criar presença digital">Criar presença digital</option>
                         <option value="Medir resultados">Medir e entender resultados</option>

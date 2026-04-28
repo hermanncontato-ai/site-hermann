@@ -18,12 +18,12 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
-        <BrandCarousel />
         <Problem />
         <Solution />
         <Services />
         <Differentials />
         <Testimonials />
+        <BrandCarousel />
         <AIAgents />
         <HowItWorks />
         <LeadCapture />
